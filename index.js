@@ -20,26 +20,29 @@ var promptsToUser = [
         type: 'input',
         name: 'logoText',
         message: 'What text do you want in your logo? (enter three characters maximum)',
-        validate: function(input) {
+        validate: function(input) { 
             if (input.length > 3) {
-                return 'Please enter a maximum of three characters';
+                return 'Please enter three characters or less';
+            } else {
+                return true;
             }
-            return true;
         }
-    },
+        },
     {
         type: 'input',
         name: 'colorText',
         message: 'What color do you want the text to be? Please provide a hex code or a color name.',
         validate: function(input) {
             const validHexColor = /^#[a-fA-F0-9]{6}$/;
+            var colorText;
             if (validHexColor.test(input)) {
+                colorText = input();
+                console.log("The chosen text color is", colorText);
                 return true;                
-                var colorText = input();
-
             } else if (correctColorNames.includes(input.toLowerCase())) {
-                return true;
                 colorText = input.toLowerCase();
+                console.log("The chosen text color is", colorText);
+                return true;
             } else {
                 return 'Please enter a valid hex code or color name';
             }
