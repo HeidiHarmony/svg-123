@@ -1,11 +1,13 @@
 const fs = require('fs');
 const inquirer = require('inquirer');
 
+let correctColorNames = [];
+
 // Read the color-choices text file containing the possible correct answers for data validation
 function initializeApp() {
     try {
         const data = fs.readFileSync('color-choices.txt', 'utf8');
-        const correctColorNames = data.trim().split('\n').map(answer => answer.trim());
+        correctColorNames = data.trim().split('\n').map(answer => answer.trim());
         console.log(correctColorNames);
     } catch (err) {
         console.error(err);
@@ -13,7 +15,6 @@ function initializeApp() {
 }
 
 initializeApp();
-
 
 var promptsToUser = [
     {
@@ -27,21 +28,17 @@ var promptsToUser = [
                 return true;
             }
         }
-        },
+    },
     {
         type: 'input',
         name: 'colorText',
         message: 'What color do you want the text to be? Please provide a hex code or a color name.',
         validate: function(input) {
             const validHexColor = /^#[a-fA-F0-9]{6}$/;
-            var colorText;
             if (validHexColor.test(input)) {
-                colorText = input();
-                console.log("The chosen text color is", colorText);
-                return true;                
+                console.log("The chosen text color is", input);               
             } else if (correctColorNames.includes(input.toLowerCase())) {
-                colorText = input.toLowerCase();
-                console.log("The chosen text color is", colorText);
+                console.log("The chosen text color is", input.toLowerCase());
                 return true;
             } else {
                 return 'Please enter a valid hex code or color name';
@@ -49,7 +46,7 @@ var promptsToUser = [
         }
     },
     {
-        type: 'choices',
+        type: 'list',
         name: 'shape',
         message: 'What shape do you want your logo to be?',
         choices: ['circle', 'square', 'triangle']
@@ -61,50 +58,81 @@ var promptsToUser = [
         validate: function(input) {
             const validHexColor = /^#[a-fA-F0-9]{6}$/;
             if (validHexColor.test(input)) {
+                console.log("The chosen shape color is", input);
                 return true;
-                var colorShape = input();
             } else if (correctColorNames.includes(input.toLowerCase())) {
+                console.log("The chosen shape color is", input.toLowerCase());
                 return true;
-                colorShape = input.toLowerCase();
             } else {
                 return 'Please enter a valid hex code or color name';
             }
         }
     }
-
-]
+];
 
 // FUNCTION CALL: QUESTIONS
 inquirer
     .prompt(promptsToUser)
-
     .then((answers) => {
         const userInput = answers;
         console.log('User input has been collected:', userInput);
-    })
+        makeMySvg(userInput);
+    });
 
-    function makeMySvg(userInput, colorText, colorShape) {
-        const logoText = userInput.logoText;
-        var shape = userInput.shape;
-        
-        if (shape === 'circle') {
-            shape = 'circle';
-        } else if (shape === 'square') {   
-            shape = 'rect';
-        } else {
-            shape = 'polygon';
-        };
+function makeMySvg(userInput) {
+    const logoText = userInput.logoText;
+    var shape = userInput.shape;
+    var svg = '';
 
-        const svg = `
-        <svg version="1.1"
-     width="300" height="200"
+    let colorText = userInput.colorText;
+    if (!/^#[a-fA-F0-9]{6}$/.test(colorText)) {
+        colorText = colorText.toLowerCase();
+    }
+
+    let colorShape = userInput.colorShape;
+    if (!/^#[a-fA-F0-9]{6}$/.test(colorShape)) {
+        colorShape = colorShape.toLowerCase();
+    }
+
+    switch (shape) {
+
+        case "circle":
+          console.log("You selected a circle.");
+svg = `<svg version="1.1"
+     width = "300" height = "200"
      xmlns="http://www.w3.org/2000/svg">
-        <svg width="300" height="200">
-        <${shape} width = "200" height = "200" cx="150" cy="100" fill="${colorShape}" />
-        <text x="150" y="100" font-family="Trebuchet" font-size="20" text-anchor="middle" fill="${colorText}">${logoText}</text>
+        <circle cx = "150" cy = "100" r= "100" fill = "${colorShape}" />
+        <text x = "150" y = "120" font-family = "sans-serif" font-size = "60" text-anchor = "middle" fill = "${colorText}">${logoText}</text>
         </svg>
         `;
-        fs.writeFileSync('logo.svg', svg);
-        console.log('SVG file has been created');
-    }
-    makeMySvg();
+          break;
+          
+        case "square":
+          console.log("You selected a square.");
+          svg = `<svg version="1.1" width="300" height="200" xmlns="http://www.w3.org/2000/svg">
+          <rect x="50" y="0" width="200" height="200" fill="${colorShape}" />
+          <text x="150" y="120" font-family="sans-serif" font-size="60" text-anchor="middle" fill = "${colorText}">${logoText}</text>
+        </svg>
+        `;
+          break;
+
+        case "triangle":
+          console.log("You selected a triangle.");
+        svg = ` <svg version = "1.1"
+     width = "300" height = "200"
+     xmlns="http://www.w3.org/2000/svg">
+        <polygon points=
+        "0, 200
+        150, 0
+        300, 200"
+        fill="${colorShape}" />
+        <text x="150" y="140" font-family="sans-serif" font-size="60" text-anchor="middle" fill="${colorText}">${logoText}</text>
+        </svg>
+        `;
+          break;
+      }
+
+    
+    fs.writeFileSync('logo.svg', svg);
+    console.log('Generated logo.svg');
+}
