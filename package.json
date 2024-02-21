@@ -4,7 +4,7 @@
   "description": "Quickly create an SVG logo file of any shape and color, using up to three characters of text in any color.",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest --verbose"
   },
   "keywords": [
     "svg",

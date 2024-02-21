@@ -1,11 +1,7 @@
- <svg version = "1.1"
+<svg version="1.1"
      width = "300" height = "200"
      xmlns="http://www.w3.org/2000/svg">
-        <polygon points=
-        "0, 200
-        150, 0
-        300, 200"
-        fill="lightseagreen" />
-        <text x="150" y="140" font-family="sans-serif" font-size="60" text-anchor="middle" fill="indigo">HhC</text>
+        <circle cx = "150" cy = "100" r= "100" fill = "blanchedalmond" />
+        <text x = "150" y = "120" font-family = "sans-serif" font-size = "60" text-anchor = "middle" fill = "burlywood"></text>
         </svg>
         

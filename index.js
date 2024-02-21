@@ -6,9 +6,10 @@ let correctColorNames = [];
 // Read the color-choices text file containing the possible correct answers for data validation
 function initializeApp() {
     try {
-        const data = fs.readFileSync('color-choices.txt', 'utf8');
+        const data = fs.readFileSync('./testing_validation/color-choices.txt', 'utf8');
         correctColorNames = data.trim().split('\n').map(answer => answer.trim());
         console.log(correctColorNames);
+        return correctColorNames;
     } catch (err) {
         console.error(err);
     }
@@ -16,34 +17,41 @@ function initializeApp() {
 
 initializeApp();
 
+function validateColor(input) {
+    const validHexColor = /^#[a-fA-F0-9]{6}$/;
+    if (validHexColor.test(input)) {
+        console.log("The chosen text color is", input); 
+        return true;                
+    } else if (correctColorNames.includes(input.toLowerCase())) {
+        console.log("The chosen text color is", input); 
+        return true;
+    } else {
+        return 'Please enter a valid hex code or color name';
+    }
+}
+
+function validateLogoText(input) {
+    if (input.length > 3) {
+        return 'Please enter three characters or less';
+    } else {
+        return true;
+    }
+}
+
+// QUESTIONS
+
 var promptsToUser = [
     {
         type: 'input',
         name: 'logoText',
         message: 'What text do you want in your logo? (enter three characters maximum)',
-        validate: function(input) { 
-            if (input.length > 3) {
-                return 'Please enter three characters or less';
-            } else {
-                return true;
-            }
-        }
+        validate: validateLogoText
     },
     {
         type: 'input',
         name: 'colorText',
         message: 'What color do you want the text to be? Please provide a hex code or a color name.',
-        validate: function(input) {
-            const validHexColor = /^#[a-fA-F0-9]{6}$/;
-            if (validHexColor.test(input)) {
-                console.log("The chosen text color is", input);               
-            } else if (correctColorNames.includes(input.toLowerCase())) {
-                console.log("The chosen text color is", input.toLowerCase());
-                return true;
-            } else {
-                return 'Please enter a valid hex code or color name';
-            }
-        }
+        validate: validateColor
     },
     {
         type: 'list',
@@ -55,18 +63,7 @@ var promptsToUser = [
         type: 'input',
         name: 'colorShape',
         message: 'What color do you want your shape to be? Remember to choose a color that contrasts with the text color.',
-        validate: function(input) {
-            const validHexColor = /^#[a-fA-F0-9]{6}$/;
-            if (validHexColor.test(input)) {
-                console.log("The chosen shape color is", input);
-                return true;
-            } else if (correctColorNames.includes(input.toLowerCase())) {
-                console.log("The chosen shape color is", input.toLowerCase());
-                return true;
-            } else {
-                return 'Please enter a valid hex code or color name';
-            }
-        }
+        validate: validateColor
     }
 ];
 
@@ -136,3 +133,6 @@ svg = `<svg version="1.1"
     fs.writeFileSync('logo.svg', svg);
     console.log('Generated logo.svg');
 }
+
+module.exports.validateColor = validateColor;
+module.exports.validateLogoText = validateLogoText;
