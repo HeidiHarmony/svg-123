@@ -68,7 +68,6 @@ var promptsToUser = [
 ];
 
 // FUNCTION CALL: QUESTIONS
-function collectUserInput(promptsToUser) {
 inquirer
     .prompt(promptsToUser)
     .then((answers) => {
@@ -76,7 +75,6 @@ inquirer
         console.log('User input has been collected:', userInput);
         makeMySvg(userInput);
     });
-}
 
 function makeMySvg(userInput) {
     const logoText = userInput.logoText;
@@ -136,7 +134,6 @@ svg = `<svg version="1.1"
     console.log('Generated logo.svg');
 }
 
-// module.exports.makeMySvg = makeMySvg;
-module.exports.collectUserInput = collectUserInput;
+module.exports.makeMySvg = makeMySvg;
 module.exports.validateColor = validateColor;
 module.exports.validateLogoText = validateLogoText;

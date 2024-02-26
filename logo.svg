@@ -1,7 +1,7 @@
 <svg version="1.1"
      width = "300" height = "200"
      xmlns="http://www.w3.org/2000/svg">
-        <circle cx = "150" cy = "100" r= "100" fill = "blanchedalmond" />
-        <text x = "150" y = "120" font-family = "sans-serif" font-size = "60" text-anchor = "middle" fill = "burlywood"></text>
+        <circle cx = "150" cy = "100" r= "100" fill = "darkgray" />
+        <text x = "150" y = "120" font-family = "sans-serif" font-size = "60" text-anchor = "middle" fill = "cornflowerblue">XYZ</text>
         </svg>
         
