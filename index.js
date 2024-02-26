@@ -78,6 +78,8 @@ inquirer
     });
 }
 
+collectUserInput(promptsToUser);
+
 function makeMySvg(userInput) {
     const logoText = userInput.logoText;
     var shape = userInput.shape;
